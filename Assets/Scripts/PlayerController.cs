@@ -8,7 +8,13 @@ public class PlayerController : MonoBehaviour {
 
 	public float cameraSensitivity;
 
+	public float runSpeed;
+	public float walkSpeed;
 	public float speed;
+
+	public float raycastLengh;
+	public bool grounded;
+	public float jumpIntensity;
 
 	void Awake(){
 		rb = GetComponent<Rigidbody> ();
@@ -24,6 +30,14 @@ public class PlayerController : MonoBehaviour {
 
 		Move (movement);
 
+		//Verifies if the player is grounded
+		SetGrounded ();
+
+		//Jump if player is grounded
+		if(Input.GetButtonDown ("Jump")){
+			Jump ();
+		}
+
 		//Rotates the player
 		float rotationY = Input.GetAxis ("Mouse X");
 		Vector3 playerRotation = transform.up * rotationY;
@@ -35,6 +49,13 @@ public class PlayerController : MonoBehaviour {
 		Vector3 cameraRotation = Vector3.right * -rotationX;
 
 		RotateCamera (cameraRotation);
+
+		//Changes the speed of the player
+		if (Input.GetButton ("Run")) {
+			speed = runSpeed;
+		} else {
+			speed = walkSpeed;
+		}
 	}
 
 	public void Move(Vector3 movement){
@@ -49,4 +70,17 @@ public class PlayerController : MonoBehaviour {
 		camera.transform.Rotate (rotation*cameraSensitivity*Time.deltaTime);
 	}
 
+	public void SetGrounded(){
+		if (Physics.Raycast (transform.position, -transform.up, raycastLengh)) {
+			grounded = true;
+		} else {
+			grounded = false;
+		}
+	}
+
+	public void Jump(){
+		if(grounded){
+			rb.AddForce(new Vector3(0, jumpIntensity, 0));
+		}
+	}
 }
