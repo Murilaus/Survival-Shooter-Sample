@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour {
 	public bool grounded;
 	public float jumpIntensity;
 
+	public GameObject weapon;
+
 	void Awake(){
 		rb = GetComponent<Rigidbody> ();
 	}
@@ -55,6 +57,14 @@ public class PlayerController : MonoBehaviour {
 			speed = runSpeed;
 		} else {
 			speed = walkSpeed;
+		}
+
+		if(Input.GetButtonDown ("Fire1") /*&& fireCountdown <=0 */){
+			weapon.SendMessage("Fire");
+		}
+
+		if(Input.GetButtonDown ("Reload")){
+			weapon.SendMessage ("Reload");
 		}
 	}
 
